@@ -6,6 +6,7 @@
 #include <cmath>
 #include <stack>
 #include <set>
+#include <queue>
 using namespace std;
 
 #define MAX_ELEMS 			50
@@ -70,12 +71,66 @@ void removeDuplicates(char* str) {
 	N = strlen(str) - 2;
 }
 
+void rleEncode(char* str) {
+	int r=0, w=0;
+	char c = '0';
+	queue<char> aux;
+
+	while (r <= N || !aux.empty()) {
+		int qtd = 1;
+
+		if (!aux.empty()) {
+			c = aux.front(); aux.pop();
+			while (!aux.empty() && aux.front() == c && qtd < 9) {
+				aux.pop();
+				qtd++;
+			}
+			if (qtd < 9 && aux.empty()) {
+				while (str[r] == c && r <= N && qtd < 9) {
+					r++;
+					qtd++;
+				}
+			}
+		}
+		else {
+			c = str[r++];
+			while (str[r] == c && r <= N && qtd < 9) {
+				r++;
+				qtd++;
+			}
+		}
+
+
+		if (w == r && r <= N) {
+			aux.push(str[r++]);
+		}
+		w++;
+
+		if (w == r && r <= N) {
+			aux.push(str[r++]);
+		}
+		w++;
+
+		str[w-2] = c;
+		str[w-1] = '0' + qtd;
+	}
+
+	N = w-1;
+}
+
+void rleDecode(char* str) {
+
+}
+
 void showMenu() {
 	system("clear");
 	printf("00) Finish execution.\n");
 	printf("01) Input a string.\n");
 	printf("02) Check parenthesization (),[],{}.\n");
 	printf("03) Remove duplicates.\n");
+	printf("03) Remove duplicates.\n");
+	printf("04) RLE Encode.\n");
+	printf("05) RLE Decode.\n");
 	printf("***************\n");
 	printf("51) ...\n");
 }
@@ -119,6 +174,15 @@ int main() {
 				removeDuplicates(str);
 				break;
 			}
+			case 4: {
+				rleEncode(str);
+				break;
+			}
+			case 5: {
+				rleDecode(str);
+				break;
+			}
+
 		}
 	}
 
